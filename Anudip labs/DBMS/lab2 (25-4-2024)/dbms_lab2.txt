@@ -1,0 +1,109 @@
+******************************************************************************************************************************************************
+1. Write a SQL statement to create a simple table countries including columns country_id,country_name and region_id.
+
+2.Write a SQL statement to create a table named jobs including columns job_id, job_title, min_salary, max_salary and check whether the max_salary amount exceeding 
+the upper limit 25000.
+
+3. Write a SQL statement to create a table employees including columns employee_id, first_name, last_name, email, phone_number hire_date, job_id, salary, 
+commission, manager_id and department_id and make sure that, the employee_id column does not contain any duplicate value at the time of insertion,
+ and the foreign key column department_id, reference by the column department_id of departments table, can contain only those values which are
+ exists in the departments table and another foreign key column job_id, referenced by the column job_id of jobs table, 
+can contain only those values which are exists in the jobs table. The InnoDB Engine have been used to create the tables.
+
+*************************************************************** || OUTPUT ||**************************************************************************
+
+Enter password: *************
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database dbms_second_lab;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use dbms_second_lab;
+Database changed
+
+mysql> CREATE TABLE countries(COUNTRY_ID varchar(2),COUNTRY_NAME varchar(40),REGION_ID decimal(10,0));
+Query OK, 0 rows affected (0.13 sec)
+
+mysql>  DESC countries;
++--------------+---------------+------+-----+---------+-------+
+| Field        | Type          | Null | Key | Default | Extra |
++--------------+---------------+------+-----+---------+-------+
+| COUNTRY_ID   | varchar(2)    | YES  |     | NULL    |       |
+| COUNTRY_NAME | varchar(40)   | YES  |     | NULL    |       |
+| REGION_ID    | decimal(10,0) | YES  |     | NULL    |       |
++--------------+---------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> CREATE TABLE IF NOT EXISTS jobs (JOB_ID varchar(10) NOT NULL ,JOB_TITLE varchar(35) NOT NULL,MIN_SALARY decimal(6,0),MAX_SALARY decimal(6,0)CHECK(MAX_SALARY<=25000));
+Query OK, 0 rows affected, 1 warning (0.26 sec)
+
+mysql> desc jobs;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| JOB_ID     | varchar(10)  | NO   |     | NULL    |       |
+| JOB_TITLE  | varchar(35)  | NO   |     | NULL    |       |
+| MIN_SALARY | decimal(6,0) | YES  |     | NULL    |       |
+| MAX_SALARY | decimal(6,0) | YES  |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql>
+mysql> CREATE TABLE departments (DEPARTMENT_ID DECIMAL(4,0) NOT NULL,DEPARTMENT_NAME VARCHAR(30) NOT NULL,MANAGER_ID DECIMAL(6,0) NOT NULL,LOCATION_ID DECIMAL(4,0),PRIMARY KEY (DEPARTMENT_ID, MANAGER_ID));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql>  DESC  departments;
++-----------------+--------------+------+-----+---------+-------+
+| Field           | Type         | Null | Key | Default | Extra |
++-----------------+--------------+------+-----+---------+-------+
+| DEPARTMENT_ID   | decimal(4,0) | NO   | PRI | NULL    |       |
+| DEPARTMENT_NAME | varchar(30)  | NO   |     | NULL    |       |
+| MANAGER_ID      | decimal(6,0) | NO   | PRI | NULL    |       |
+| LOCATION_ID     | decimal(4,0) | YES  |     | NULL    |       |
++-----------------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE IF NOT EXISTS employees (
+    -> EMPLOYEE_ID decimal(6,0) NOT NULL PRIMARY KEY,
+    -> FIRST_NAME varchar(20) DEFAULT NULL,
+    -> LAST_NAME varchar(25) NOT NULL,
+    -> EMAIL varchar(25) NOT NULL,
+    -> PHONE_NUMBER varchar(20) DEFAULT NULL,
+    -> HIRE_DATE date NOT NULL,
+    -> JOB_ID varchar(10) NOT NULL,
+    -> SALARY decimal(8,2) DEFAULT NULL,
+    -> COMMISSION_PCT decimal(2,2) DEFAULT NULL,
+    -> MANAGER_ID decimal(6,0) DEFAULT NULL,
+    -> DEPARTMENT_ID decimal(4,0) DEFAULT NULL,
+    -> FOREIGN KEY(DEPARTMENT_ID,MANAGER_ID)
+    -> REFERENCES departments(DEPARTMENT_ID,MANAGER_ID)
+    -> )ENGINE=InnoDB;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql>  DESC employees;
++----------------+--------------+------+-----+---------+-------+
+| Field          | Type         | Null | Key | Default | Extra |
++----------------+--------------+------+-----+---------+-------+
+| EMPLOYEE_ID    | decimal(6,0) | NO   | PRI | NULL    |       |
+| FIRST_NAME     | varchar(20)  | YES  |     | NULL    |       |
+| LAST_NAME      | varchar(25)  | NO   |     | NULL    |       |
+| EMAIL          | varchar(25)  | NO   |     | NULL    |       |
+| PHONE_NUMBER   | varchar(20)  | YES  |     | NULL    |       |
+| HIRE_DATE      | date         | NO   |     | NULL    |       |
+| JOB_ID         | varchar(10)  | NO   |     | NULL    |       |
+| SALARY         | decimal(8,2) | YES  |     | NULL    |       |
+| COMMISSION_PCT | decimal(2,2) | YES  |     | NULL    |       |
+| MANAGER_ID     | decimal(6,0) | YES  |     | NULL    |       |
+| DEPARTMENT_ID  | decimal(4,0) | YES  | MUL | NULL    |       |
++----------------+--------------+------+-----+---------+-------+
+11 rows in set (0.00 sec)

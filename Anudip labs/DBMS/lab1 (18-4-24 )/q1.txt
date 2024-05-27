@@ -1,0 +1,154 @@
+***********************************************************************
+1.Consider two tables, customers and orders, with the following structures:
+
+Customers Table:
+
+customer_id (Primary Key)
+
+first_name
+
+Last_name
+
+Orders Table:
+
+order_id (Primary Key)
+
+customer_id (Foreign Key)
+
+order_date
+
+Total_amount
+
+Write an SQL query to retrieve the first and last names of customers along with the
+
+order date and total amount of their orders. Use an INNER JOIN to connect the two
+
+tables.
+
+*****************************************OUTPUT ( 1)***************************************************
+Enter password: *************
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE DATABASE FoodOrderingSystem;
+Query OK, 1 row affected (0.04 sec)
+
+mysql> show FoodOrderingSystem;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FoodOrderingSystem' at line 1
+mysql> show DATABASES;
++---------------------------+
+| Database                  |
++---------------------------+
+| foodorderingsystem        |
+| information_schema        |
+| mysql                     |
+| performance_schema        |
+| student_management_system |
+| sys                       |
++---------------------------+
+6 rows in set (0.00 sec)
+
+mysql> USE FoodOrderingSystem;
+Database changed
+
+mysql> CREATE TABLE Customers(c_id INT NOT NULL PRIMARY KEY,c_fristname VARCHAR(255));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> DESC Customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| c_id        | int          | NO   | PRI | NULL    |       |
+| c_fristname | varchar(255) | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+2 rows in set (0.04 sec)
+
+mysql> ALTER TABLE Customers ADD c_lastname VARCHAR(255);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC Customers;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| c_id        | int          | NO   | PRI | NULL    |       |
+| c_fristname | varchar(255) | YES  |     | NULL    |       |
+| c_lastname  | varchar(255) | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Customers( c_id,c_fristname,c_lastname) VALUES (1,'SHRUTIKA','SAMBHARAM'),(2,'LALITA','BOGA'),(3,'PALLAVI','VANGARI');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Customers;
++------+-------------+------------+
+| c_id | c_fristname | c_lastname |
++------+-------------+------------+
+|    1 | SHRUTIKA    | SAMBHARAM  |
+|    2 | LALITA      | BOGA       |
+|    3 | PALLAVI     | VANGARI    |
++------+-------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE Orders(o_id INT NOT NULL PRIMARY KEY,c_id INT,o_date DATE,o_totalamount FLOAT,FOREIGN KEY (c_id) REFERENCES Customers(c_id));
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> desc Orders;
++---------------+-------+------+-----+---------+-------+
+| Field         | Type  | Null | Key | Default | Extra |
++---------------+-------+------+-----+---------+-------+
+| o_id          | int   | NO   | PRI | NULL    |       |
+| c_id          | int   | YES  | MUL | NULL    |       |
+| o_date        | date  | YES  |     | NULL    |       |
+| o_totalamount | float | YES  |     | NULL    |       |
++---------------+-------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO Orders( o_id, c_id, o_date, o_totalamount) VALUES (1,2,'12-4-24',120.00);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM Orders;
++------+------+------------+---------------+
+| o_id | c_id | o_date     | o_totalamount |
++------+------+------------+---------------+
+|    1 |    2 | 2012-04-24 |           120 |
++------+------+------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO Orders( o_id, c_id, o_date, o_totalamount) VALUES (2,1,'23-8-14',1500.20);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO Orders( o_id, c_id, o_date, o_totalamount) VALUES (3,3,'24-6-13',19500.50);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM Orders;
++------+------+------------+---------------+
+| o_id | c_id | o_date     | o_totalamount |
++------+------+------------+---------------+
+|    1 |    2 | 2012-04-24 |           120 |
+|    2 |    1 | 2023-08-14 |        1500.2 |
+|    3 |    3 | 2024-06-13 |       19500.5 |
++------+------+------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT Customers.c_fristname,Customers.c_lastname,Orders.o_date,Orders.o_totalamount FROM Customers INNER JOIN Orders ON Orders.c_id=Customers.c_id;
++-------------+------------+------------+---------------+
+| c_fristname | c_lastname | o_date     | o_totalamount |
++-------------+------------+------------+---------------+
+| SHRUTIKA    | SAMBHARAM  | 2023-08-14 |        1500.2 |
+| LALITA      | BOGA       | 2012-04-24 |           120 |
+| PALLAVI     | VANGARI    | 2024-06-13 |       19500.5 |
++-------------+------------+------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql>
